@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="120px"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_marginLeft="60px"
+        android:layout_marginRight="0px">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/curtain_icon1"
+            android:src="@drawable/curtain"
+            android:layout_weight="1"
+            android:layout_marginTop="-30px" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:weightSum="2"
+            android:layout_marginTop="-30px">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtainup1"
+                android:src="@drawable/uparrow"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtaindown1"
+                android:src="@drawable/downarrow"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="120px"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_marginRight="0px"
+        android:layout_marginLeft="60px">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/curtain_icon2"
+            android:src="@drawable/curtain"
+            android:layout_weight="1"
+            android:layout_marginTop="-30px" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:weightSum="2"
+            android:layout_marginTop="-30px">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtainup2"
+                android:src="@drawable/uparrow"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtaindown2"
+                android:src="@drawable/downarrow"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="120px"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_marginRight="0px"
+        android:layout_marginLeft="60px" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/curtain_icon3"
+            android:src="@drawable/curtain"
+            android:layout_weight="1"
+            android:layout_marginTop="-30px" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:weightSum="2"
+            android:layout_marginTop="-30px" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtainup3"
+                android:src="@drawable/uparrow"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/curtaindown3"
+                android:src="@drawable/downarrow"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

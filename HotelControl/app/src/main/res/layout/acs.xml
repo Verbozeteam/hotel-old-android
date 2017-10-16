@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:seekarc="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/acsll"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/ac1rl">
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/seekArc1"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:layout_gravity="center"
+            seekarc:arcColor="@color/colorRed"
+            seekarc:clockwise="true"
+            seekarc:max="100"
+            seekarc:progressColor="@color/colorPrimary"
+            seekarc:rotation="180"
+            seekarc:startAngle="30"
+            seekarc:sweepAngle="300"
+            seekarc:thumb="@drawable/seekbarthumbcircle"
+            seekarc:touchInside="true"
+            android:padding="100dp"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|center_vertical|center_horizontal">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/seekArc1"
+                android:layout_alignTop="@id/seekArc1"
+                android:layout_alignRight="@id/seekArc1"
+                android:layout_alignBottom="@id/seekArc1"
+                android:gravity="center"
+                android:layout_margin="1dp">
+
+                <TextView
+                    android:id="@+id/ac1text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="80dp"
+                    android:text="0"
+                    android:textColor="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:text="o"
+                    android:id="@+id/textDegree"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="-20dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="80dp"
+                    android:id="@+id/textCelcius"
+                    android:textColor="@color/colorPrimary"
+                    android:text="C" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25"
+                    android:id="@+id/roomtemp_ar"
+                    android:textSize="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/roomtemp"
+                    android:id="@+id/textView10"
+                    android:textSize="30dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25"
+                    android:id="@+id/roomtemp"
+                    android:textSize="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+
+            </LinearLayout>
+
+            <ToggleButton
+                android:layout_width="60pt"
+                android:layout_height="40pt"
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButton"
+                android:textSize="15pt"
+                android:textOn="@string/on"
+                android:textOff="@string/off"
+                android:layout_marginTop="20pt" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/ac2rl">
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/seekArc2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="100dp"
+            seekarc:arcColor="#6c6e6a"
+            seekarc:clockwise="true"
+            seekarc:max="100"
+            seekarc:progressColor="@color/colorPrimary"
+            seekarc:rotation="180"
+            seekarc:startAngle="30"
+            seekarc:sweepAngle="300"
+            seekarc:thumb="@drawable/seekbarthumbcircle"
+            seekarc:touchInside="true"/>
+
+        <TextView
+            android:id="@+id/ac2text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/seekArc2"
+            android:layout_alignTop="@id/seekArc2"
+            android:layout_alignRight="@id/seekArc2"
+            android:layout_alignBottom="@id/seekArc2"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:textSize="80dp"
+            android:text="0"
+            android:textColor="@color/colorPrimary" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/ac2text" />
+    </RelativeLayout> -->
+
+</LinearLayout>

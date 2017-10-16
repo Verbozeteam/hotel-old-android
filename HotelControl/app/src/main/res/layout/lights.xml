@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ambient_lights"
+        android:id="@+id/textView3"
+        android:paddingLeft="10pt"
+        android:paddingTop="10pt"
+        android:textColor="#ffffff"
+        android:textSize="40dp"
+        android:layout_marginRight="20px" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="200px"
+        android:weightSum="5"
+        android:layout_marginBottom="30dp">
+
+        <com.verboze.control.LightButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lightoff"
+            android:id="@+id/light1"
+            android:layout_weight="1" />
+
+        <com.verboze.control.LightButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lightoff"
+            android:id="@+id/light2"
+            android:layout_weight="1" />
+
+        <com.verboze.control.LightButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lightoff"
+            android:id="@+id/light3"
+            android:layout_weight="1" />
+
+        <com.verboze.control.LightButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lightoff"
+            android:id="@+id/light4"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <com.verboze.control.LightButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/lightoff"
+                android:id="@+id/light5"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="-40dp"
+                android:text="@string/all"
+                android:id="@+id/allText"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dimmers"
+        android:id="@+id/textView4"
+        android:paddingLeft="10pt"
+        android:textColor="#ffffff"
+        android:textSize="40dp"
+        android:layout_marginRight="20px" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="20"
+        android:layout_marginTop="40px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50px"
+            android:src="@drawable/dimmer"
+            android:id="@+id/dimmer_icon1"
+            android:layout_weight="1" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dimmer1"
+            android:progressDrawable="@drawable/seekbarprogressbar"
+            android:minHeight="35dp"
+            android:maxHeight="35dp"
+            android:progress="0"
+            android:thumbTintMode="multiply"
+            android:thumb="@drawable/seekbarthumb"
+            android:layout_weight="19"
+            android:max="100" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="20"
+        android:layout_marginTop="40px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50px"
+            android:src="@drawable/dimmer"
+            android:id="@+id/dimmer_icon2"
+            android:layout_weight="1" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dimmer2"
+            android:progressDrawable="@drawable/seekbarprogressbar"
+            android:minHeight="35dp"
+            android:maxHeight="35dp"
+            android:progress="0"
+            android:thumbTintMode="multiply"
+            android:thumb="@drawable/seekbarthumb"
+            android:layout_weight="19"
+            android:max="100" />
+
+    </LinearLayout>
+
+</LinearLayout>

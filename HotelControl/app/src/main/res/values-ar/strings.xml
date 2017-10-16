@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">التحكم المنزلي</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="curtains">الستائر</string>
+    <string name="acs">المكيف</string>
+    <string name="room">خدمة الغرفة</string>
+    <string name="lights">الإضاءة</string>
+    <string name="bathroom">الحمام</string>
+    <string name="cur_order">الطلب الحالي</string>
+    <string name="place_order">إرسال الطلب</string>
+    <string name="new_order">طلب جديد</string>
+    <string name="hide_order">إخفاء الطلب</string>
+    <string name="ambient_lights">إنارة الغرفة</string>
+    <string name="bathroom_lights">إنارة الحمام</string>
+    <string name="bathroom_light_1">الرئيسي</string>
+    <string name="bathroom_light_2">المرآة</string>
+    <string name="dimmers">الأضواء الخافتة</string>
+    <string name="dimmer_1">جانب السرير</string>
+    <string name="dimmer_2">الثريا</string>
+    <string name="dimmer_3">المرآة</string>
+    <string name="devices_on_network">الأجهزة على الشبكة</string>
+    <string name="refresh">تحديث</string>
+    <string name="settings">الإعدادات</string>
+    <string name="language">اللغة</string>
+    <string name="all">الكل</string>
+    <string name="dnd">عدم الازعاج</string>
+    <string name="roomservice">خدمة الغرفة</string>
+    <string name="roomtemp">حرارة الغرفة:</string>
+    <string name="on">تشغيل</string>
+    <string name="off">إطفاء</string>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.verboze.control.DimmerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#414141"
+    android:screenOrientation="portrait"
+    android:id="@+id/overall"
+    tools:context=".Main"
+    android:keepScreenOn="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/sidebar"/>
+            <include layout="@layout/content"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/overlayer"
+            android:src="@drawable/seekbarthumb"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+</com.verboze.control.DimmerLayout>
