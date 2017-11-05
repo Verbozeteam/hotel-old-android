@@ -19,20 +19,26 @@ public class RoomFeatureRoomService extends RoomFeature {
     TextView[] texts = null;
     long[] timers = null;
 
+    private void SetButtonState(int i, boolean isOn) {
+        buttons[i].setState(isOn);
+        activity.communication.addToQueue("s" + Integer.toString(i) + ":" + (isOn ? "1" : "0") + "\n");
+        if (isOn)
+            texts[i].setTextColor(activity.getResources().getColor(R.color.colorWhite));
+        else
+            texts[i].setTextColor(activity.getResources().getColor(R.color.colorBackground));
+        timers[i] = System.currentTimeMillis();
+        return;
+    }
+
     View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             for (int i = 0; i < buttons.length; i++) {
                 if (v == buttons[i]) {
-                    buttons[i].toggle();
-                    boolean val = buttons[i].isOn();
-                    activity.communication.addToQueue("t" + Integer.toString(i+8) + ":" + (val ? "1" : "0") + "\n");
-                    if (val)
-                        texts[i].setTextColor(activity.getResources().getColor(R.color.colorWhite));
-                    else
-                        texts[i].setTextColor(activity.getResources().getColor(R.color.colorBackground));
-                    timers[i] = System.currentTimeMillis();
-                    return;
+                    SetButtonState(i, !buttons[i].isOn());
+                    // make sure we dont have both DND and room service
+                    if (buttons[i].isOn()) // if this is turned on, force the other to turn off
+                        SetButtonState(1-i, false);
                 }
             }
         }

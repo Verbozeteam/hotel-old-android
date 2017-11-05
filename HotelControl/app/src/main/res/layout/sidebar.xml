@@ -12,13 +12,13 @@
         android:layout_height="200dp"
         android:src="@drawable/iconhome"/>
 
-    <ListView
+    <com.verboze.control.NotStupidListView
         android:id="@+id/room_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
         android:textColor="#000000"
-        android:listSelector="#414141" />
+        android:listSelector="#414141">
+        </com.verboze.control.NotStupidListView>
 
     <View
         android:layout_margin="20dp"
@@ -26,11 +26,10 @@
         android:layout_height="1dp"
         android:background="#ffffff" />
 
-    <ListView
+    <com.verboze.control.NotStupidListView
         android:id="@+id/extra_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
         android:listSelector="#414141" />
 
 </LinearLayout>

@@ -18,11 +18,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -44,7 +51,7 @@ import java.util.Locale;
 
 public class Main
         extends Activity
-        implements ListView.OnItemClickListener, ImageView.OnLongClickListener {
+        implements ImageView.OnLongClickListener {
 
     public boolean IS_TABLET = true;
 
@@ -55,22 +62,69 @@ public class Main
 
     private RoomFeatureSettings settings;
 
-    private ListView room;
-    private ArrayAdapter<String> room_adapter;
+    private NotStupidListView room_listview;
 
-    private ListView extra;
-    private ArrayAdapter<String> extra_adapter;
+    private NotStupidListView extra_listview;
 
     private RoomFeature cur_room_feature;
     private HashMap<String, RoomFeature> rooms;
 
     public CommunicationManager communication = null;
     long refresh_timer = 0;
-    private String current_device_name = "";
+    private RoomControllerDevice current_device = null;
     private Handler periodic_task_handler = null;
 
     private long screenDimTimer = 0;
     private long lastID = -1;
+
+    public class customViewGroup extends ViewGroup {
+        public customViewGroup(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent ev) {
+            return true;
+        }
+    }
+
+    private void removeStatusBar() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION); // Hide the status bar
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        WindowManager manager = ((WindowManager) getApplicationContext()
+            .getSystemService(Context.WINDOW_SERVICE));
+
+        WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
+        localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        localLayoutParams.gravity = Gravity.TOP;
+        localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+
+                // this is to enable the notification to receive touch events
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+
+                // Draws over status bar
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
+        localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        localLayoutParams.height = (int) (50 * getResources()
+                .getDisplayMetrics().scaledDensity);
+        localLayoutParams.format = PixelFormat.TRANSPARENT;
+
+        customViewGroup view = new customViewGroup(this);
+
+        manager.addView(view, localLayoutParams);
+    }
 
     public synchronized boolean setScreenDim(boolean bright) {
         if (bright) {
@@ -119,11 +173,7 @@ public class Main
                 SetLocale(locale);
         }
 
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION); // Hide the status bar
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        removeStatusBar();
 
         if (IS_TABLET)
             setContentView(R.layout.tablet);
@@ -140,18 +190,18 @@ public class Main
             public void run() {
                 setScreenDim(false);
 
-                CommunicationManager.DiscoverDevices(new CommunicationManager.DeviceDiscoveryCallback() {
-                    @Override
-                    public void onDeviceFound(final String addr, final String text, final int type, final String data) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (text.equals(current_device_name))
+                /* THIS IS NOT NEEDED FOR HOTEL
+                if (overlayer != null && overlayer.getVisibility() != View.VISIBLE) {
+                    CommunicationManager.DiscoverDevices(new CommunicationManager.DeviceDiscoveryCallback() {
+                        @Override
+                        public void onDeviceFound(final String addr, final String text, final int type, final String data) {
+                            RoomControllerDevice copy = current_device;
+                            if (copy != null)
+                                if (text.equals(copy.name) && !addr.equals((copy.IP)))
                                     communication.SetServerIP(addr);
-                            }
-                        });
-                    }
-                });
+                        }
+                    });
+                }*/
 
                 periodic_task_handler .postDelayed(this, 5000);
             }
@@ -192,16 +242,16 @@ public class Main
 
         RoomControllerDevice d = RoomControllerDevice.GetSavedDevice(this);
 
+        d = new RoomControllerDevice("192.168.1.108", "lol", 3, "1311");
+
         SetCurrentDevice(null);
         DiscoverRooms(); // will discover kitchen (if exists)
 
         if (d != null) {
             settings.cur_device = d;
             SetCurrentDevice(d);
-            SetCurrentFeature(rooms.get(GetEnglishFromLocale(room.getItemAtPosition(0).toString())));
-            room.requestFocusFromTouch();
-            room.setSelection(0);
-            room.setItemChecked(0, true);
+            SetCurrentFeature(rooms.get(GetEnglishFromLocale(room_listview.getItem(0))));
+            room_listview.setSelection(0);
         }
     }
 
@@ -215,19 +265,18 @@ public class Main
     }
 
     public void SetCurrentDevice(RoomControllerDevice d) {
-        room.setEnabled(false);
-        extra.setEnabled(false);
+        room_listview.setEnabled(false);
+        extra_listview.setEnabled(false);
         for (String k: rooms.keySet()) {
             RoomFeature f = rooms.get(k);
             f.reInit(getResources().getConfiguration().locale.getLanguage());
         }
-        room.setEnabled(true);
-        extra.setEnabled(true);
+        room_listview.setEnabled(true);
+        extra_listview.setEnabled(true);
 
-        if (d != null) {
-            current_device_name = d.name;
+        current_device = d;
+        if (d != null)
             communication.SetServerIP(d.IP);
-        }
     }
 
     private void SetCurrentFeature(RoomFeature feature) {
@@ -282,8 +331,8 @@ public class Main
     @Override
     public boolean onLongClick(View v) {
         if (v == settings_img) {
-            clearListViewSelection(room, room_adapter);
-            clearListViewSelection(extra, extra_adapter);
+            room_listview.clearSelection();
+            extra_listview.clearSelection();
             RoomFeature settings = rooms.get("Settings");
             settings.reInit(getResources().getConfiguration().locale.getLanguage());
             SetCurrentFeature(settings);
@@ -292,82 +341,72 @@ public class Main
         return false;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getAdapter() == room_adapter) {
-            clearListViewSelection(extra, extra_adapter);
-            String str = GetEnglishFromLocale(room.getItemAtPosition(position).toString());
-            SetCurrentFeature(rooms.get(str));
-        }
-        else if(parent.getAdapter() == extra_adapter) {
-            clearListViewSelection(room, room_adapter);
-            String str = GetEnglishFromLocale(extra.getItemAtPosition(position).toString());
-            if (str.equals("Settings")) {
-                rooms.get("APPSettings").reInit(getResources().getConfiguration().locale.getLanguage());
-                SetCurrentFeature(rooms.get("APPSettings"));
-            } else {
-                if (cur_room_feature != rooms.get("Kitchen")) {
-                    RoomControllerDevice new_device = settings.available_devices.get(str);
-                    for (String k : rooms.keySet()) {
-                        RoomFeature f = rooms.get(k);
-                        f.reInit(getResources().getConfiguration().locale.getLanguage());
-                    }
-                    RoomFeatureKitchen kitchen = (RoomFeatureKitchen)rooms.get("Kitchen");
-                    kitchen.my_room_name = settings.cur_device.name;
-                    SetCurrentFeature(kitchen);
-                    //communication_kitchen.SetServerAddress(new_device.IP, 7990);
-                }
-            }
-        }
-    }
-
     private void SetupRoom() {
         settings_img = (ImageView)findViewById(R.id.settings_img);
         settings_img.setOnLongClickListener(this);
 
-        room_adapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.listviewentry,
-                new ArrayList<String>());
-        room = (ListView) findViewById(R.id.room_list);
-        room.setAdapter(room_adapter);
-        room.setOnItemClickListener(this);
-        room.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        room.setEnabled(false);
+        room_listview = (NotStupidListView)findViewById(R.id.room_list);
+        room_listview.setOnSelectionChangeListener(new NotStupidListView.OnItemSelectionChangeListener() {
+            @Override
+            public void OnItemSelectionChange(NotStupidListView view, int new_index) {
+                extra_listview.clearSelection();
+                String str = GetEnglishFromLocale(room_listview.getItem(new_index));
+                SetCurrentFeature(rooms.get(str));
+            }
+        });
+        room_listview.setEnabled(false);
 
-        extra_adapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.listviewentry,
-                new ArrayList<String>());
-        extra = (ListView) findViewById(R.id.extra_list);
-        extra.setAdapter(extra_adapter);
-        extra.setOnItemClickListener(this);
-        extra.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        extra.setEnabled(false);
+        extra_listview = (NotStupidListView)findViewById(R.id.extra_list);
+        extra_listview.setOnSelectionChangeListener(new NotStupidListView.OnItemSelectionChangeListener() {
+            @Override
+            public void OnItemSelectionChange(NotStupidListView view, int new_index) {
+                room_listview.clearSelection();
+                String str = GetEnglishFromLocale(extra_listview.getItem(new_index));
+                if (str.equals("Settings")) {
+                    rooms.get("APPSettings").reInit(getResources().getConfiguration().locale.getLanguage());
+                    SetCurrentFeature(rooms.get("APPSettings"));
+                } else {
+                    if (cur_room_feature != rooms.get("Kitchen")) {
+                        RoomControllerDevice new_device = settings.available_devices.get(str);
+                        for (String k : rooms.keySet()) {
+                            RoomFeature f = rooms.get(k);
+                            f.reInit(getResources().getConfiguration().locale.getLanguage());
+                        }
+                        RoomFeatureKitchen kitchen = (RoomFeatureKitchen)rooms.get("Kitchen");
+                        kitchen.my_room_name = settings.cur_device.name;
+                        SetCurrentFeature(kitchen);
+                        //communication_kitchen.SetServerAddress(new_device.IP, 7990);
+                    }
+                }
+            }
+        });
+        extra_listview.setEnabled(false);
 
         cur_room_feature = null;
         rooms = new HashMap<>();
 
         settings = new RoomFeatureSettings(this);
         rooms.put("Settings", settings);
-        extra_adapter.add(getString(R.string.settings));
+        extra_listview.addItem(getString(R.string.settings));
 
         rooms.put("APPSettings", new RoomFeatureAPPSettings(this));
 
         //rooms.put("Kitchen", new RoomFeatureKitchen(this));
 
         rooms.put("Lights", new RoomFeatureLights(this));
-        room_adapter.add(getString(R.string.lights));
+        room_listview.addItem(getString(R.string.lights));
 
         rooms.put("Bathroom", new RoomFeatureBathroom(this));
-        room_adapter.add(getString(R.string.bathroom));
+        room_listview.addItem(getString(R.string.bathroom));
 
 //        rooms.put("Curtains", new RoomFeatureCurtains(this));
 //        room_adapter.add(getString(R.string.curtains));
 
         rooms.put("AC", new RoomFeatureAC(this));
-        room_adapter.add(getString(R.string.acs));
+        room_listview.addItem(getString(R.string.acs));
 
         rooms.put("Room Service", new RoomFeatureRoomService(this));
-        room_adapter.add(getString(R.string.room));
+        room_listview.addItem(getString(R.string.room));
     }
 
     public void DiscoverRooms() {
@@ -377,11 +416,11 @@ public class Main
         }
         refresh_timer = curTime;
 
-        room.setEnabled(false);
-        extra.setEnabled(false);
+        room_listview.setEnabled(false);
+        extra_listview.setEnabled(false);
         settings.settings_adapter.clear();
-        extra_adapter.clear();
-        extra_adapter.add(getString(R.string.settings));
+        extra_listview.clearItems();
+        extra_listview.addItem(getString(R.string.settings));
         settings.available_devices.clear();
         settings.cur_device = null;
 
@@ -396,9 +435,9 @@ public class Main
                             // d.IP = "k" + d.IP; // k<IP> instead of <IP> DEPRICATED
                             String cur_lang = getResources().getConfiguration().locale.getLanguage();
                             if (text.toLowerCase().equals("kitchen") && cur_lang == "ar")
-                                extra_adapter.insert("المطبخ", 0);
+                                extra_listview.insertItem("المطبخ", 0);
                             else
-                                extra_adapter.insert(text, 0);
+                                extra_listview.insertItem(text, 0);
                         } else
                             settings.settings_adapter.add(text);
                         settings.available_devices.put(text, d);

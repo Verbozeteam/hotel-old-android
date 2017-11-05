@@ -20,7 +20,7 @@
     <string name="dimmers">Dimmers</string>
     <string name="dimmer_1">Bedside</string>
     <string name="dimmer_2">Chandelier</string>
-    <string name="dimmer_3">Mirror</string>
+    <string name="dimmer_3">Main</string>
     <string name="devices_on_network">Devices on the network</string>
     <string name="refresh">Refresh</string>
     <string name="settings">Settings</string>

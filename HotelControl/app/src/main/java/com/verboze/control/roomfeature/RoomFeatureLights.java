@@ -16,7 +16,6 @@ import com.verboze.control.Main;
 import com.verboze.control.R;
 import com.verboze.control.RoomControllerDevice;
 
-import org.w3c.dom.Text;
 
 /**
  * Created by hasan on 7/14/17.
@@ -25,6 +24,7 @@ public class RoomFeatureLights extends RoomFeature {
     View view = null;
     LightButton[] switches = null;
     ImageView[] seekIcons = null;
+    TextView[] seekTexts = null;
     SeekBar[] sliders = null;
     LightButton allToggle = null;
     long[] timers = null;
@@ -45,6 +45,8 @@ public class RoomFeatureLights extends RoomFeature {
     protected int[] dimmer_ids;
     /** IDs of dimmer icon views (all of which CAN be displayed, according to num_dimmers) */
     protected int[] dimmer_icon_ids;
+    /** IDs of dimmer text views (all of which CAN be displayed, according to num_dimmers) */
+    protected int[] dimmer_text_ids;
     /** texts to make left-to-right on arabic */
     protected int[] ltr_texts;
     /** base resource to inflate */
@@ -155,12 +157,13 @@ public class RoomFeatureLights extends RoomFeature {
         super(ac);
         base_switch_sending_index = 0;
         base_dimmer_sending_index = 0;
-        num_lights = 2;
+        num_lights = 3;
         num_dimmers = 1;
         switch_ids = new int[] {R.id.light1, R.id.light2, R.id.light3, R.id.light4};
         dimmer_ids = new int[] {R.id.dimmer1, R.id.dimmer2};
         dimmer_icon_ids = new int[] {R.id.dimmer_icon1, R.id.dimmer_icon2};
-        ltr_texts = new int[] {R.id.textView3, R.id.textView4};
+        dimmer_text_ids = new int[] {R.id.textView5, R.id.textView6};
+        ltr_texts = new int[] {R.id.textView3};
         base_resource = R.layout.lights;
     }
 
@@ -180,6 +183,11 @@ public class RoomFeatureLights extends RoomFeature {
             seekIcons = new ImageView[dimmer_ids.length];
             for (int i = 0; i < seekIcons.length; i++)
                 seekIcons[i] = null;
+        }
+        if (seekTexts == null) {
+            seekTexts = new TextView[dimmer_text_ids.length];
+            for (int i = 0; i < seekTexts.length; i++)
+                seekTexts[i] = null;
         }
         if (rememberedLights == null) {
             rememberedLights = new int[switches.length];
@@ -205,6 +213,8 @@ public class RoomFeatureLights extends RoomFeature {
                     seekIcons[i] = (ImageView) view.findViewById(dimmer_icon_ids[i]);
                     seekIcons[i].setAlpha(0.333f);
                 }
+                if (seekTexts[i] == null)
+                    seekTexts[i] = (TextView) view.findViewById(dimmer_text_ids[i]);
             }
 
             allToggle = (LightButton) view.findViewById(R.id.light5);
@@ -225,15 +235,16 @@ public class RoomFeatureLights extends RoomFeature {
 
     @Override
     public void onClick(RoomControllerDevice cur_device, ViewGroup main_tab) {
-        if (cur_device.data.length() == 4) {
-            num_lights = Character.getNumericValue(cur_device.data.charAt(1));
-            num_dimmers = Character.getNumericValue(cur_device.data.charAt(2));
-        }
+//        if (cur_device.data.length() == 4) {
+//            num_lights = Character.getNumericValue(cur_device.data.charAt(1));
+//            num_dimmers = Character.getNumericValue(cur_device.data.charAt(2));
+//        }
         for (int i = 0; i < switch_ids.length; i++)
             switches[i].setVisibility(i < num_lights ? View.VISIBLE : View.INVISIBLE);
         for (int i = 0; i < dimmer_ids.length; i++) {
             sliders[i].setVisibility(i < num_dimmers ? View.VISIBLE : View.INVISIBLE);
             seekIcons[i].setVisibility(i < num_dimmers ? View.VISIBLE : View.INVISIBLE);
+            seekTexts[i].setVisibility(i < num_dimmers ? View.VISIBLE : View.INVISIBLE);
         }
         main_tab.addView(view);
     }
