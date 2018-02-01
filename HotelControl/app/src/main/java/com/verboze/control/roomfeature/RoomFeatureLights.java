@@ -157,7 +157,7 @@ public class RoomFeatureLights extends RoomFeature {
         super(ac);
         base_switch_sending_index = 0;
         base_dimmer_sending_index = 0;
-        num_lights = 3;
+        num_lights = 2;
         num_dimmers = 1;
         switch_ids = new int[] {R.id.light1, R.id.light2, R.id.light3, R.id.light4};
         dimmer_ids = new int[] {R.id.dimmer1, R.id.dimmer2};

@@ -13,12 +13,14 @@
     <string name="place_order">Place Order</string>
     <string name="new_order">New Order</string>
     <string name="hide_order">Hide Order</string>
+    <string name="entrance_light">Entrance</string>
+    <string name="bedside_lights">Bedside</string>
     <string name="ambient_lights">Room Lights</string>
     <string name="bathroom_lights">Bathroom Lights</string>
     <string name="bathroom_light_1">Main</string>
     <string name="bathroom_light_2">Mirror</string>
     <string name="dimmers">Dimmers</string>
-    <string name="dimmer_1">Bedside</string>
+    <string name="dimmer_1">Ceiling</string>
     <string name="dimmer_2">Chandelier</string>
     <string name="dimmer_3">Main</string>
     <string name="devices_on_network">Devices on the network</string>

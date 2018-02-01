@@ -14,11 +14,13 @@
     <string name="new_order">طلب جديد</string>
     <string name="hide_order">إخفاء الطلب</string>
     <string name="ambient_lights">إنارة الغرفة</string>
+    <string name="entrance_light">المدخل</string>
+    <string name="bedside_lights">جانب السرير</string>
     <string name="bathroom_lights">إنارة الحمام</string>
     <string name="bathroom_light_1">الرئيسي</string>
     <string name="bathroom_light_2">المرآة</string>
     <string name="dimmers">الأضواء الخافتة</string>
-    <string name="dimmer_1">جانب السرير</string>
+    <string name="dimmer_1">السقف</string>
     <string name="dimmer_2">الثريا</string>
     <string name="dimmer_3">الرئيسي</string>
     <string name="devices_on_network">الأجهزة على الشبكة</string>

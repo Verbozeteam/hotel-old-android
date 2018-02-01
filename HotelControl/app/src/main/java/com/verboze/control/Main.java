@@ -242,7 +242,7 @@ public class Main
 
         RoomControllerDevice d = RoomControllerDevice.GetSavedDevice(this);
 
-        d = new RoomControllerDevice("192.168.1.108", "lol", 3, "1311");
+        d = new RoomControllerDevice("192.168.10.1", "lol", 3, "1311");
 
         SetCurrentDevice(null);
         DiscoverRooms(); // will discover kitchen (if exists)
@@ -463,9 +463,21 @@ public class Main
      * BLOCKED KEYS
      */
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
+    private int m_vol_count = 0;
+    private long m_vol_timer = 0;
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (blockedKeys.contains(event.getKeyCode())) {
+            long cur_time = System.currentTimeMillis();
+            if (cur_time > m_vol_timer + 1000)
+                m_vol_count = 0;
+            m_vol_timer = cur_time;
+            m_vol_count += 1;
+            if (m_vol_count >= 5) {
+                Intent settingsIntent =
+                        new Intent(android.provider.Settings.ACTION_SETTINGS);
+                startActivityForResult(settingsIntent, 0);
+            }
             return true;
         } else {
             return super.dispatchKeyEvent(event);

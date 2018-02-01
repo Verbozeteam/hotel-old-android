@@ -3,6 +3,7 @@ package com.verboze.control.roomfeature;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -20,6 +21,7 @@ import java.util.logging.Handler;
  */
 public class RoomFeatureAC extends RoomFeature {
     int num_acs = 1;
+    int current_fan_speeds[] = null;
     View view = null;
     SeekArc arcs[] = null;
     TextView texts[] = null;
@@ -28,6 +30,7 @@ public class RoomFeatureAC extends RoomFeature {
     TextView room_texts[] = null;
     TextView room_texts_ar[] = null;
     ToggleButton acToggles[] = null;
+    RadioButton radioButtons[][] = null;
     int lastSentVal[] = null;
     long timers[] = null;
     String cur_lang;
@@ -73,12 +76,16 @@ public class RoomFeatureAC extends RoomFeature {
             texts[ac_index].setAlpha(0.2f);
             degTexts[ac_index].setAlpha(0.2f);
             unitTexts[ac_index].setAlpha(0.2f);
+            for (int i = 0; i < radioButtons[ac_index].length; i++)
+                radioButtons[ac_index][i].setEnabled(false);
         } else {
             arcs[ac_index].setEnabled(true);
             arcs[ac_index].setAlpha(1.0f);
             texts[ac_index].setAlpha(1.0f);
             degTexts[ac_index].setAlpha(1.0f);
             unitTexts[ac_index].setAlpha(1.0f);
+            for (int i = 0; i < radioButtons[ac_index].length; i++)
+                radioButtons[ac_index][i].setEnabled(true);
         }
     }
 
@@ -89,8 +96,26 @@ public class RoomFeatureAC extends RoomFeature {
                 if ((ToggleButton)v == acToggles[i]) {
                     int state = acToggles[i].isChecked() ? 1 : 0;
                     SetACToggle(i, state);
-                    activity.communication.addToQueue("f" + Integer.toString(i) + ":" + Integer.toString(state) + "\n");
+                    int fan_speed = state == 0 ? 0 : current_fan_speeds[i];
+                    activity.communication.addToQueue("f" + Integer.toString(i) + ":" + Integer.toString(fan_speed) + "\n");
                     timers[i] = System.currentTimeMillis();
+                }
+            }
+        }
+    };
+
+    RadioButton.OnClickListener radioListener = new RadioButton.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            for (int i = 0; i < num_acs; i++) {
+                for (int j = 0; j < radioButtons[i].length; j++) {
+                    if (view == (View)radioButtons[i][j]) {
+                        current_fan_speeds[i] = j + 1;
+
+                        int state = acToggles[i].isChecked() ? 1 : 0;
+                        int fan_speed = state == 0 ? 0 : current_fan_speeds[i];
+                        activity.communication.addToQueue("f" + Integer.toString(i) + ":" + Integer.toString(fan_speed) + "\n");
+                    }
                 }
             }
         }
@@ -114,7 +139,9 @@ public class RoomFeatureAC extends RoomFeature {
             int IDs5[] = {R.id.toggleButton};
             int IDs6[] = {R.id.textDegree};
             int IDs7[] = {R.id.textCelcius};
+            int IDs8[][] = {{R.id.radioButton2, R.id.radioButton3}};
 
+            current_fan_speeds = new int[num_acs];
             lastSentVal = new int[num_acs];
             texts = new TextView[num_acs];
             arcs = new SeekArc[num_acs];
@@ -123,6 +150,7 @@ public class RoomFeatureAC extends RoomFeature {
             acToggles = new ToggleButton[num_acs];
             degTexts = new TextView[num_acs];
             unitTexts = new TextView[num_acs];
+            radioButtons = new RadioButton[num_acs][2];
 
             for (int i = 0; i < num_acs; i++) {
                 lastSentVal[i] = 0;
@@ -142,6 +170,13 @@ public class RoomFeatureAC extends RoomFeature {
 
                 acToggles[i] = (ToggleButton) view.findViewById(IDs5[i]);
                 acToggles[i].setOnClickListener(clickListener);
+
+                for (int j = 0; j < 2; j++) {
+                    radioButtons[i][j] = (RadioButton) view.findViewById(IDs8[i][j]);
+                    radioButtons[i][j].setOnClickListener(radioListener);
+                }
+                current_fan_speeds[i] = 1;
+                radioButtons[i][0].setChecked(true);
             }
         }
         if (timers == null)
@@ -206,7 +241,7 @@ public class RoomFeatureAC extends RoomFeature {
 
         for (int i = 0; i < ((fanSpeeds.length < num_acs) ? fanSpeeds.length : num_acs); i++) {
             if (curTime - timers[i] > 4000) {
-                acToggles[i].setChecked(fanSpeeds[i] == 1);
+                acToggles[i].setChecked(fanSpeeds[i] != 0);
                 SetACToggle(i, fanSpeeds[i]);
             }
         }

@@ -74,7 +74,7 @@ public class RoomFeatureRoomService extends RoomFeature {
             }
             buttons[0].reson = R.drawable.cardon;
             buttons[0].resoff = R.drawable.card;
-            buttons[1].reson = R.drawable.cardon;
+            buttons[1].reson = R.drawable.cardon_blue;
             buttons[1].resoff = R.drawable.card;
         }
         if (timers == null) {

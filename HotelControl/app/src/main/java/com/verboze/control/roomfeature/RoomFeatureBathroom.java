@@ -14,7 +14,7 @@ public class RoomFeatureBathroom extends RoomFeatureLights {
 
     public RoomFeatureBathroom(Main ac) {
         super(ac);
-        base_switch_sending_index = 4;
+        base_switch_sending_index = 2;
         base_dimmer_sending_index = 1;
         num_lights = 2;
         num_dimmers = 1;
