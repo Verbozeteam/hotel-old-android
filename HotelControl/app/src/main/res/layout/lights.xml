@@ -37,8 +37,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="80dp"
                 android:layout_marginTop="-40dp"
-                android:text="@string/bedside_lights"
-                android:id="@+id/bedside_light_text"
+                android:text="@string/dimmer_1"
+                android:id="@+id/light1_text"
                 android:textAlignment="center"
                 android:textSize="30dp"
                 android:textColor="#ffffff" />
@@ -60,25 +60,55 @@
                 android:layout_height="80dp"
                 android:layout_marginTop="-40dp"
                 android:text="@string/entrance_light"
-                android:id="@+id/entrance_light_text"
+                android:id="@+id/light2_text"
                 android:textAlignment="center"
                 android:textSize="30dp"
                 android:textColor="#ffffff" />
         </LinearLayout>
 
-        <com.verboze.control.LightButton
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/lightoff"
-            android:id="@+id/light3"
-            android:layout_weight="1" />
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <com.verboze.control.LightButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/lightoff"
+                android:id="@+id/light3"/>
 
-        <com.verboze.control.LightButton
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="-40dp"
+                android:text="@string/bedside_lights"
+                android:id="@+id/light3_text"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/lightoff"
-            android:id="@+id/light4"
-            android:layout_weight="1" />
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <com.verboze.control.LightButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/lightoff"
+                android:id="@+id/light4"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="-40dp"
+                android:text=""
+                android:id="@+id/light4_text"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                android:textColor="#ffffff" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

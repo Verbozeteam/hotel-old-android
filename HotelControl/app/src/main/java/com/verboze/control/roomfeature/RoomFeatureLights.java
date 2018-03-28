@@ -30,6 +30,7 @@ public class RoomFeatureLights extends RoomFeature {
     long[] timers = null;
     int[] rememberedLights;
     int[] rememberedDimmers;
+    boolean base_is_main = false;
 
     /** switches will send tn-tm (t0-t4 for example), this is the base index to start from */
     protected int base_switch_sending_index;
@@ -74,14 +75,21 @@ public class RoomFeatureLights extends RoomFeature {
                 if (v == switches[i]) {
                     switches[i].toggle();
                     boolean val = switches[i].isOn();
-                    int port = base_switch_sending_index + i;
-                    activity.communication.addToQueue("t" + Integer.toString(port) + ":" + (val ? "1" : "0") + "\n");
-                    timers[i] = System.currentTimeMillis();
+                    if (base_is_main && i == 0) {
+                        updateProgressBar(0, val ? sliders[0].getProgress() : 0);
+                    } else {
+                        int port = base_switch_sending_index + i;
+                        if (base_is_main)
+                            port -= 1;
+                        activity.communication.addToQueue("t" + Integer.toString(port) + ":" + (val ? "1" : "0") + "\n");
+                        timers[i] = System.currentTimeMillis();
 
-                    UpdateAllSwitch();
+                        UpdateAllSwitch();
+                    }
                     return;
                 }
             }
+
             if (v == allToggle) {
                 allToggle.toggle();
                 if (allToggle.isOn()) {
@@ -121,15 +129,21 @@ public class RoomFeatureLights extends RoomFeature {
         }
     };
 
+    void updateProgressBar(int index, int new_value) {
+        int port = base_dimmer_sending_index + index;
+        activity.communication.addToQueue("l" + Integer.toString(port) + ":" + Integer.toString(new_value) + "\n");
+        seekIcons[index].setAlpha((float) new_value / 150.0f + 0.333f);
+        timers[index + switch_ids.length] = System.currentTimeMillis();
+    }
+
     SeekBar.OnSeekBarChangeListener seekListener = new SeekBar.OnSeekBarChangeListener() {
         private void UpdateProgress(SeekBar seekBar) {
             for (int i = 0; i < sliders.length; i++) {
                 if (seekBar == sliders[i]) {
                     int val = sliders[i].getProgress();
-                    int port = base_dimmer_sending_index + i;
-                    activity.communication.addToQueue("l" + Integer.toString(port) + ":" + Integer.toString(val) + "\n");
-                    seekIcons[i].setAlpha((float) val / 150.0f + 0.333f);
-                    timers[i + switch_ids.length] = System.currentTimeMillis();
+                    if (base_is_main && !switches[0].isOn())
+                        val = 0;
+                    updateProgressBar(i, val);
 
                     UpdateAllSwitch();
                 }
@@ -155,9 +169,10 @@ public class RoomFeatureLights extends RoomFeature {
 
     public RoomFeatureLights(Main ac) {
         super(ac);
+        base_is_main = true; // ***************************************************** CHANGE ME FFS **************
         base_switch_sending_index = 0;
         base_dimmer_sending_index = 0;
-        num_lights = 2;
+        num_lights = 3;
         num_dimmers = 1;
         switch_ids = new int[] {R.id.light1, R.id.light2, R.id.light3, R.id.light4};
         dimmer_ids = new int[] {R.id.dimmer1, R.id.dimmer2};
@@ -254,16 +269,23 @@ public class RoomFeatureLights extends RoomFeature {
         long curTime = System.currentTimeMillis();
         for (int i = base_switch_sending_index; i < Math.min(base_switch_sending_index + switch_ids.length, lights.length); i++) {
             int index = i - base_switch_sending_index;
+            if (base_is_main) {
+                if (index == switches.length - 1)
+                    continue;
+                index += 1;
+            }
             if (curTime - timers[index] > 2000) {
                 switches[index].setState(lights[i] == 1);
             }
         }
-        for (int i = base_dimmer_sending_index; i < Math.min(base_dimmer_sending_index + dimmer_ids.length, dimmers.length); i++) {
-            int index = i - base_dimmer_sending_index;
-            if (curTime - timers[switch_ids.length + index] > 2000) {
-                sliders[index].setProgress(dimmers[i]);
-                seekIcons[index].setAlpha((float) dimmers[i] / 150.0f + 0.333f);
-                UpdateAllSwitch();
+        if (!(base_is_main && !switches[0].isOn())) {
+            for (int i = base_dimmer_sending_index; i < Math.min(base_dimmer_sending_index + dimmer_ids.length, dimmers.length); i++) {
+                int index = i - base_dimmer_sending_index;
+                if (curTime - timers[switch_ids.length + index] > 2000) {
+                    sliders[index].setProgress(dimmers[i]);
+                    seekIcons[index].setAlpha((float) dimmers[i] / 150.0f + 0.333f);
+                    UpdateAllSwitch();
+                }
             }
         }
     }
